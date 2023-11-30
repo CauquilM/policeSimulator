@@ -5,9 +5,11 @@
       <div class="middleLine"></div>
       <div class="rightLine"></div>
       <div v-for="car in traffic" :key="car.id">
-        <div :id="car.id" :class="{ [car.id]: true, stopped: car.stopped }" @click="test(car)"></div>
+        <div :id="car.id" :class="{ [car.id]: true, stopped: car.stopped }" @click="stopCar(car)"></div>
+        <b-modal :id="car.id" centered title="BootstrapVue" hide-header-close no-close-on-backdrop hide-footer>
+          <b-button block variant="success" @click="letGo(car)">Let go</b-button>
+        </b-modal>
       </div>
-
     </div>
   </div>
 </template>
@@ -15,7 +17,7 @@
 <style>
 body {
   margin: 0;
-  background: blueviolet;
+  background-color: darkblue !important;
 }
 
 .road {
@@ -23,8 +25,10 @@ body {
   width: 30%;
   height: 100vh;
   margin: 0 auto;
-  background-color: grey;
+  background-color: darkgrey;
   box-sizing: border-box;
+  border-left: 20px solid grey;
+  border-right: 20px solid grey;
 }
 
 .leftLine, .rightLine {
@@ -84,7 +88,7 @@ body {
   width: 40px;
   height: 50px;
   background-color: red;
-  animation: moveUp 10s linear infinite;
+  animation: moveUp 9s linear infinite;
   cursor: pointer; /* Add cursor pointer to indicate it's clickable */
   transition: transform 2s ease-out;
 }
@@ -102,6 +106,7 @@ body {
 
 .car1, .car2, .car3, .car4 {
   /* ... your existing styles */
+
   &.stopped {
     animation-play-state: paused;
   }
@@ -134,16 +139,20 @@ export default {
     return {
       traffic: [
         {id: "car1", stopped: false},
-        {id: "car2" , stopped: false},
-        {id: "car3" , stopped: false},
+        {id: "car2", stopped: false},
+        {id: "car3", stopped: false},
         {id: "car4", stopped: false}
       ]
     };
   },
   methods: {
-    test(car){
-      console.log(car.stopped);
+    stopCar(car) {
+      this.$bvModal.show(`${car.id}`);
       return car.stopped = !car.stopped;
+    },
+    letGo(car){
+      car.stopped = !car.stopped
+      this.$bvModal.hide(`${car.id}`);
     }
   },
   mounted() {
