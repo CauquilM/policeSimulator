@@ -1,21 +1,13 @@
 <template>
   <div>
     <div class="road">
-      <div class="car1"
-           @click="stopAnimation">
-      </div>
       <div class="leftLine"></div>
-      <div class="car2"
-           @click="stopAnimation">
-      </div>
       <div class="middleLine"></div>
-      <div class="car3"
-           @click="stopAnimation">
-      </div>
       <div class="rightLine"></div>
-      <div class="car4"
-           @click="stopAnimation">
+      <div v-for="car in traffic" :key="car.id">
+        <div :id="car.id" :class="{ [car.id]: true, stopped: car.stopped }" @click="test(car)"></div>
       </div>
+
     </div>
   </div>
 </template>
@@ -92,7 +84,7 @@ body {
   width: 40px;
   height: 50px;
   background-color: red;
-  animation: moveUp 8s linear infinite;
+  animation: moveUp 10s linear infinite;
   cursor: pointer; /* Add cursor pointer to indicate it's clickable */
   transition: transform 2s ease-out;
 }
@@ -108,9 +100,13 @@ body {
   transition: transform 2s ease-out;
 }
 
-.paused {
-  animation-play-state: paused;
+.car1, .car2, .car3, .car4 {
+  /* ... your existing styles */
+  &.stopped {
+    animation-play-state: paused;
+  }
 }
+
 
 @keyframes moveDown {
   0% {
@@ -120,6 +116,7 @@ body {
     top: calc(97% - 30px);
   }
 }
+
 @keyframes moveUp {
   0% {
     top: calc(97% - 30px);
@@ -128,28 +125,26 @@ body {
     top: 0;
   }
 }
+
 </style>
 
 <script>
 export default {
   data() {
-    return {};
+    return {
+      traffic: [
+        {id: "car1", stopped: false},
+        {id: "car2" , stopped: false},
+        {id: "car3" , stopped: false},
+        {id: "car4", stopped: false}
+      ]
+    };
   },
   methods: {
-    stopAnimation() {
-      const playerElement = this.$el.querySelector('.player');
-      playerElement.classList.toggle('paused');
-
-      if (playerElement.classList.contains('paused')) {
-        // Gradually slow down the animation
-        playerElement.style.animationPlayState = 'paused';
-        this.playerTransform = 'rotate(15deg)';
-      } else {
-        // Resume the animation
-        playerElement.style.animationPlayState = 'running';
-        this.playerTransform = 'rotate(0deg)';
-      }
-    },
+    test(car){
+      console.log(car.stopped);
+      return car.stopped = !car.stopped;
+    }
   },
   mounted() {
     // You can add any additional logic or data manipulation here
